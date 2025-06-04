@@ -1,0 +1,32 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment (update with your actual env folder name)
+myvenv/
+
+# Django specific
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+
+# Environment variables
+.env
+
+# VSCode or other editor folders
+.vscode/
+.idea/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+
+
+**/migrations/*.py
+!**/migrations/__init__.py
+
+

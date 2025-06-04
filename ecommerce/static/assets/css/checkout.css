@@ -1,0 +1,154 @@
+.order-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.order-summary-table th, .order-summary-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.order-summary-table th {
+    background-color: #f2f2f2;
+}
+.product-name {
+    width: 40%;
+}
+.price-column, .qty-column, .subtotal-column {
+    width: 20%;
+}
+.price-wrapper {
+    display: flex;
+    align-items: center;
+}
+.currency {
+    margin-right: 4px;
+}
+.cart-btn-3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+
+
+
+.available-coupons {
+    margin-bottom: 20px;
+}
+
+.coupon-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.coupon-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.coupon-item input[type="radio"] {
+    margin-right: 15px;
+    margin-top: 5px;
+}
+
+.coupon-item label {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.coupon-item h4 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.coupon-item p {
+    margin: 0 0 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.coupon-code {
+    font-size: 14px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.coupon-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.apply-coupon-btn,
+.continue-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.apply-coupon-btn {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #cccccc;
+}
+
+.apply-coupon-btn:hover {
+    background-color: #FF7575;
+    color: #ffffff;
+    border-color: #FF7575;
+}
+
+.continue-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.continue-btn:hover {
+    background-color: #45a049;
+}
+
+/* Payment Method Styles */
+.payment-methods {
+    margin-bottom: 20px;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.payment-option input[type="radio"] {
+    margin-right: 15px;
+}
+
+.payment-option label {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.error-message {
+    color: #ff0000;
+    margin-top: 10px;
+    display: none;
+}
+
+
+

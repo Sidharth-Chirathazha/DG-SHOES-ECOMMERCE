@@ -1,0 +1,651 @@
+{% load static %}
+
+<!doctype html>
+<html class="no-js" lang="">
+    
+<!-- Mirrored from demo.hasthemes.com/fowler-preview/fowler/shop.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 20 Jun 2024 10:16:14 GMT -->
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>DG - Shoes Store HTML Template</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico in the root directory -->
+		<link rel="apple-touch-icon" href="{% static 'assets/img/apple-touch-icon.png'%}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'assetsimg/favicon.ico' %}">
+		
+		<!-- Google Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,800,900' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+		<!-- all css here -->
+		<!-- bootstrap v3.3.6 css -->
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+		<!-- animate css -->
+        <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+        <!-- nivo slider CSS -->
+		<link rel="stylesheet" href="{% static 'assets/lib/css/nivo-slider.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'assets/lib/css/preview.css' %}" type="text/css" media="screen" />
+		<!-- jquery-ui.min css -->
+        <link rel="stylesheet" href="{% static 'assets/css/jquery-ui.min.css' %}">
+		<!-- meanmenu css -->
+        <link rel="stylesheet" href="{% static 'assets/css/meanmenu.min.css' %}">
+		<!-- owl.carousel css -->
+        <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.css' %}">
+		<!-- font-awesome css -->
+        <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+		<!-- style css -->
+		<link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
+		<!-- responsive css -->
+        <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+		<!-- modernizr css -->
+        <script src="{% static 'assets/js/vendor/modernizr-2.8.3.min.js' %}"></script>
+
+		<link rel="stylesheet" href="{% static 'assets/css/shoplist.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/css/shop-list.css' %}">
+
+		
+		<link rel="stylesheet" href="{% static 'assets/css/top-nav.css' %}">
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+		<style>
+
+			.bannerhead-area {
+
+				background: rgba(0, 0, 0, 0) url('{% static 'assets/img/header-banner.jpg' %}') no-repeat scroll center center;
+				position: relative;
+
+			  }
+
+			.section-titel {
+			display: block;
+			overflow: hidden;
+			padding-bottom: 30px;
+			position: relative;
+			}
+
+		.section-titel::after {
+			background: rgba(0, 0, 0, 0) url('{% static 'assets/img/sec-titel.png' %}') no-repeat scroll 0 0;
+			content: "";
+			height: 100%;
+			left: 39%;
+			position: absolute;
+			top: 30px;
+			width: 100%;
+			}
+		.section-titel > h3 {
+			color: #666666;
+			font-family: "Montserrat",sans-serif;
+			font-size: 20px;
+			font-weight: 400;
+			text-transform: uppercase;
+			}
+		.hot-deals-area {
+			background-attachment: scroll;
+			background-image: url("{% static 'assets/img/home-1/hot-deals.jpg' %}");
+			background-position: center center;
+			background-size: cover;
+			}
+
+			
+		</style>
+    </head>
+    <body class="other-page shp">
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- HEADER TOP AREA START -->
+		<!-- HEADER TOP AREA START -->
+		<section class="header-top-area">
+			<div class="container">
+				<div class="header-content">
+					<div class="user-info">
+						{% if user.is_authenticated %}
+							<i class="fa fa-user"></i>
+							<span class="welcome-text">Welcome, {{ user.first_name }}</span>
+							<a href="{% url 'logout' %}" class="auth-link">LOGOUT</a>
+						{% else %}
+							<a href="{% url 'login' %}" class="auth-link">LOG IN</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</section>
+        <!-- HEADER TOP AREA END -->
+		<!-- MENU AREA START -->
+		<div class="menu-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-2 col-sm-2">
+						<div class="logo-area">
+							<a href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'index' %}{% endif %}"><img src="{% static 'assets/img/home-1/logo_dg_footer.png' %}" width="110" height="50" alt="" /></a>
+						</div>
+					</div>
+					<div class="col-md-8 col-sm-8">
+						<div class="main-menu">
+							<ul class="list-inline">
+							  <li class="expand active"><a href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'index' %}{% endif %}">HOME</a>
+							  </li>
+							  <li><a href="{% url 'shop_list' %}">SHOP</a>
+								<!-- Mega Menu Four Column -->
+								<div class="mega-menu">
+									{% for category in categories%}
+									<span>
+										<a href="{% url 'shop_list' %}?category={{category.category_name}}" class="mega-title">{{ category.category_name }}</a>
+										<a href="#"><img alt="{{category.category_name}}" src="{{category.image.url}}"/></a>
+										{% for subcategory in category.subcategories.all %}
+										{% if subcategory.is_listed %}
+										<a href="{% url 'shop_list' %}?category={{category.category_name}}&subcategory={{subcategory.subcategory_name}}">{{ subcategory.subcategory_name}}</a>
+										{% endif %}
+										{% endfor %}
+									</span>
+									{% endfor %}
+								</div>
+							  </li>
+							  <li class="expand"><a href="{% url 'user_account' %}">ACCOUNT</a>
+							  </li>
+							  <li><a href="{% url 'contact_us' %}">CONTACT</a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- MOBILE-MENU-AREA START --> 
+					<div class="mobile-menu-area">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12">
+								<div class="mobile-area">
+									<div class="mobile-menu">
+										<nav id="mobile-nav">
+											<ul>
+												<li><a href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'index' %}{% endif %}">Home </a></li>
+												<li><a href="{% url 'shop_list' %}">SHOP</a>
+												<!-- Mega Menu Four Column -->
+												<div class="mega-menu">
+													{% for category in categories%}
+													<span>
+														<a href="{% url 'shop_list' %}?category={{category.category_name}}" class="mega-title">{{ category.category_name }}</a>
+														<a href="#"><img alt="{{category.category_name}}" src="{{category.image.url}}"/></a>
+														{% for subcategory in category.subcategories.all %}
+														{% if subcategory.is_listed %}
+														<a href="{% url 'shop_list' %}?category={{category.category_name}}&subcategory={{subcategory.subcategory_name}}">{{ subcategory.subcategory_name}}</a>
+														{% endif %}
+														{% endfor %}
+													</span>
+													{% endfor %}
+												</div>
+												</li>
+												<li><a href="{% url 'user_account'%}"> Account </a>
+												</li>
+												<li><a href="{% url 'contact_us' %}"> Contact Us </a></li>
+											</ul>
+										</nav>
+									</div>	
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- MOBILE-MENU-AREA END  -->
+					<div class="col-md-2 col-sm-2">
+						<div class="menu-right-area">
+							<ul>
+								<li>
+									<a href="#" class="cart-toggler search-icon">
+										<i class="fa fa-search"></i>
+									</a>
+									<div class="header-bottom-search">
+										<form method="POST" action="#" class="search-box">
+											<div>
+												<input type="text" autocomplete="off" placeholder="Search" value="">
+											</div>
+										</form>						            
+									</div>
+								</li>
+								<li>
+									<a href="{% url 'cart_detail' %}" class="cart-toggler mini-cart-icon">
+										<i class="fa fa-shopping-cart"></i>
+										{% if cart_item_count > 0 %}
+										<span>{{ cart_item_count }}</span>
+										{% endif %}
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- MENU AREA END -->
+		<!-- BANNER AREA STRAT -->
+		<section class="bannerhead-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="banner-heading">
+							<h1>SHOPPING</h1>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- BANNER AREA END -->
+		<!-- SHOP AREA START -->
+		<section class="wishlist-area shop-area">
+			<div class="container">
+				<div class="row">
+					<!-- Sidebar -->
+					<div class="col-md-3">
+						<div class="wishlist-left-area">
+							<!-- Category -->
+							<div class="category">
+								<h4>CATEGORY</h4>
+								<div class="category-list">
+									<ul>
+										{% for category in categories %}
+											<li class="main-category">
+												<span>{{ category.category_name }}</span>
+												<ul class="subcategory-list">
+													{% for subcategory in category.subcategories.all %}
+														<li>
+															<a href="{% url 'shop_list' %}?category={{ category.category_name }}&subcategory={{ subcategory.subcategory_name }}{% if query %}&q={{ query }}{% endif %}">
+																{{ subcategory.subcategory_name }}
+																<span></span>
+															</a>
+														</li>
+													{% endfor %}
+												</ul>
+											</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<!-- Price Range -->
+							<!-- Price Range -->
+							<div class="sidebar-widget">
+								<h4>PRICE RANGE</h4>
+								<form method="get" action="">
+									<!-- Preserve other query parameters -->
+									{% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+									{% if selected_subcategory %}<input type="hidden" name="subcategory" value="{{ selected_subcategory }}">{% endif %}
+									{% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+									{% for color in selected_colors %}
+										<input type="hidden" name="color" value="{{ color }}">
+									{% endfor %}
+
+									<div class="price-range-options">
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="price_ranges[]" id="price-range-0-1500" value="0-1500" 
+												{% if '0-1500' in selected_price_ranges %}checked{% endif %}>
+											<label class="form-check-label" for="price-range-0-1500">Below ₹1500</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="price_ranges[]" id="price-range-1500-3000" value="1500-3000" 
+												{% if '1500-3000' in selected_price_ranges %}checked{% endif %}>
+											<label class="form-check-label" for="price-range-1500-3000">₹1500 - ₹3000</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="price_ranges[]" id="price-range-3000-4500" value="3000-4500" 
+												{% if '3000-4500' in selected_price_ranges %}checked{% endif %}>
+											<label class="form-check-label" for="price-range-3000-4500">₹3000 - ₹4500</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="price_ranges[]" id="price-range-4500-6000" value="4500-6000" 
+												{% if '4500-6000' in selected_price_ranges %}checked{% endif %}>
+											<label class="form-check-label" for="price-range-4500-6000">₹4500 - ₹6000</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="price_ranges[]" id="price-range-6000+" value="6000+" 
+												{% if '6000+' in selected_price_ranges %}checked{% endif %}>
+											<label class="form-check-label" for="price-range-6000+">Above ₹6000</label>
+										</div>
+									</div>
+
+									<div class="button-container">
+										<button type="submit" class="apply-filters">Apply Filters</button>
+									</div>
+								</form>
+							</div>
+
+		
+							<!-- Color Options (replacing Sizes) -->
+							<!-- Colors -->
+							<div class="sidebar-widget">
+								<h4>COLORS</h4>
+								<form method="get" action="">
+									<!-- Preserve other query parameters -->
+									{% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+									{% if selected_subcategory %}<input type="hidden" name="subcategory" value="{{ selected_subcategory }}">{% endif %}
+									{% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+									
+									<!-- Preserve selected price ranges -->
+									{% for price_range in selected_price_ranges %}
+									<input type="hidden" name="price_ranges[]" value="{{ price_range }}">
+									{% endfor %}
+
+									<div class="color-options">
+										<div class="color-option">
+											<input type="checkbox" id="color-red" name="color" value="red" {% if 'red' in selected_colors %}checked{% endif %}>
+											<label for="color-red" style="background-color: #ff0000;"></label>
+										</div>
+										<div class="color-option">
+											<input type="checkbox" id="color-grey" name="color" value="grey" {% if 'grey' in selected_colors %}checked{% endif %}>
+											<label for="color-grey" style="background-color: #a6a6a6;"></label>
+										</div>
+										<div class="color-option">
+											<input type="checkbox" id="color-blue" name="color" value="blue" {% if 'blue' in selected_colors %}checked{% endif %}>
+											<label for="color-blue" style="background-color: #0000ff;"></label>
+										</div>
+										<div class="color-option">
+											<input type="checkbox" id="color-yellow" name="color" value="yellow" {% if 'yellow' in selected_colors %}checked{% endif %}>
+											<label for="color-yellow" style="background-color: #ffff00;"></label>
+										</div>
+										<div class="color-option">
+											<input type="checkbox" id="color-pink" name="color" value="pink" {% if 'pink' in selected_colors %}checked{% endif %}>
+											<label for="color-pink" style="background-color: #ff00ff;"></label>
+										</div>
+										<div class="color-option">
+											<input type="checkbox" id="color-black" name="color" value="black" {% if 'black' in selected_colors %}checked{% endif %}>
+											<label for="color-black" style="background-color: #000000;"></label>
+										</div>
+									</div>
+									
+									<div class="button-container">
+										<button type="submit" class="apply-filters">Apply Filters</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+		
+					<!-- Main Content -->
+					<div class="col-md-9">
+						<div class="shop-right-area">
+							<div class="shop-banner">
+								<img src="{% static 'assets/img/other-pg/shop-1.jpg' %}" alt="" />
+							</div>
+							<div class="shop-tab-area">
+								<!--NAV PILL-->
+								<div class="shop-tab-pill">
+									<ul>
+										<li>
+											<div class="sort-position">
+												<label><i class="fa fa-sort-amount-asc"></i>Sort by : </label>
+												<select onchange="location = this.value;">
+													<option value="?sort=price_asc{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}" {% if sort_by == 'price_asc' %}selected{% endif %}>Price (Low-High)</option>
+													<option value="?sort=price_desc{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}" {% if sort_by == 'price_desc' %}selected{% endif %}>Price (High-Low)</option>
+													<option value="?sort=name_asc{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}" {% if sort_by == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+													<option value="?sort=name_desc{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}" {% if sort_by == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+													<option value="?sort=latest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}" {% if sort_by == 'latest' %}selected{% endif %}>Latest</option>
+												</select>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<!--NAV PILL-->
+
+								<!--SHOPLIST START-->
+								<div class="tab-content">
+									<div class="row tab-pane active" id="grid">
+										<div class="product-grid d-flex flex-wrap">
+											{% for product,color_image in page_obj %}
+											<div class="col-md-4 col-sm-4">
+												<div class="single-product">
+													<div class="product-image">
+														<a class="product-img" href="{% url 'product_detail' product.id %}?variant={{ color_image.id }}">
+															<img class="primary-img" src="{{ color_image.image_1.url }}" alt="{{ product.product_name }}" />
+															<img class="secondary-img" src="{{ color_image.image_2.url }}" alt="{{ product.product_name }}" />
+														</a>
+													</div>
+													{% if product.is_offer_applied %}
+													<span class="onsale">
+														<span class="sale-text fs-5">{{product.discount_percentage}}%</span>
+													</span>
+													{% endif %}
+													<div class="product-action">
+														<h4 class="product-name"><a href="{% url 'product_detail' product.id %}?variant={{ color_image.id }}">{{ product.product_name }}</a></h4>
+														<div class="rating-price-wrapper">
+															<ul class="pro-rating">
+																<li class="pro-ratcolor"><i class="fa fa-star" style="font-size: 10px;"></i></li>
+																<li class="pro-ratcolor"><i class="fa fa-star" style="font-size: 10px;"></i></li>
+																<li class="pro-ratcolor"><i class="fa fa-star" style="font-size: 10px;"></i></li>
+																<li><i class="fa fa-star" style="font-size: 10px;"></i></li>
+																<li><i class="fa fa-star" style="font-size: 10px;"></i></li>
+															</ul>
+															{% if color_image.total_quantity == 0 %}
+															<span class="price out-of-stock">Out of stock</span>
+															{% else %}
+																{% if product.is_offer_applied %}
+																<span class="price">
+																	<span class="original-price">₹ {{ product.price }}</span>
+																	₹ {{ product.discounted_price }}
+																</span>
+																{% else %}
+																<span class="price">₹ {{product.price }}</span>
+																{% endif %}
+															{% endif %}
+														</div>
+													</div>
+													<div class="pro-action">
+														<ul>
+															<li>
+																<a class="test all_src_icon" href="{% url 'add_to_wishlist' color_image.id %}" title="" data-toggle="tooltip" data-placement="top" data-original-title="Add Wishlist">
+																<i class="fa fa-heart" aria-hidden="true"></i>
+																</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--SHOPLIST END-->
+							
+							<!-- Pagination controls -->
+							<div class="d-flex justify-content-between mt-3">
+								<div>
+									<p>Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} products</p>
+								</div>
+								<nav aria-label="Page navigation">
+									<ul class="pagination custom-pagination">
+										{% if page_obj.has_previous %}
+										<li class="page-item">
+											<a class="page-link" href="?{% if selected_category %}category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}{% if sort_by %}&sort={{ sort_by }}{% endif %}&page={{ page_obj.previous_page_number }}" aria-label="Previous">
+												<span aria-hidden="true">&laquo;</span>
+											</a>
+										</li>
+										{% else %}
+										<li class="page-item disabled">
+											<span class="page-link">&laquo;</span>
+										</li>
+										{% endif %}
+										{% for page_num in page_obj.paginator.page_range %}
+										{% if page_obj.number == page_num %}
+										<li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+										{% elif page_num > page_obj.number|add:"-3" and page_num < page_obj.number|add:"3" %}
+										<li class="page-item"><a class="page-link" href="?{% if selected_category %}category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}{% if sort_by %}&sort={{ sort_by }}{% endif %}&page={{ page_num }}">{{ page_num }}</a></li>
+										{% endif %}
+										{% endfor %}
+										{% if page_obj.has_next %}
+										<li class="page-item">
+											<a class="page-link" href="?{% if selected_category %}category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% for color in selected_colors %}&color={{ color }}{% endfor %}{% for price_range in selected_price_ranges %}&price_ranges[]={{ price_range }}{% endfor %}{% if sort_by %}&sort={{ sort_by }}{% endif %}&page={{ page_obj.next_page_number }}" aria-label="Next">
+												<span aria-hidden="true">&raquo;</span>
+											</a>
+										</li>
+										{% else %}
+										<li class="page-item disabled">
+											<span class="page-link">&raquo;</span>
+										</li>
+										{% endif %}
+									</ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- OUR BRAND AREA START -->
+		<section class="our-brand-area">
+			<div class="container">
+				<div class="text-center">
+					<div class="section-titel">
+						<h3>OUR BRANDS</h3>
+					</div>
+				</div>
+				<div class="row blog-area">
+					<div id="ourbrand-owl">
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-1.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-2.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-3.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-4.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-5.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-3.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-1.jpg' %}" alt="" /></div>
+						<div class="col-md-12"><img src="{% static 'assets/img/other-pg/brand-logo-2.jpg' %}" alt="" /></div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- OUR BRAND AREA END -->
+		<!-- Footer Top Area Start -->
+		<div class="footer-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 col-sm-4">
+						<div class="social-icon">
+							<ul>
+								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="#"><i class="fa fa-rss"></i></a></li>
+								<li><a href="#"><i class="fa fa-instagram"></i></a></li>
+								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+								<li><a href="#"><i class="fa fa-youtube"></i></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-8 col-sm-8">
+						<div class="foteer-news">
+							<h3>NEWSLETTER</h3>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed</p>
+						</div>
+						<div class="search-input">
+							<form action="#">
+								<input type="text" placeholder="Enter your keyword...">
+								<button class="search-button" type="submit" value="Submit">Subcribe</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Footer Top Area End -->
+		<!-- Footer Middle Area Start -->
+		<section class="footer-middle">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3 col-sm-4 col-xs-12 xs-res-mrbtm">
+						<div class="footer-menu">
+							<h4>MY ACCOUNT</h4>
+							<ul>
+								<li><a href="#">Login</a></li>
+								<li><a href="#">My Account</a></li>
+								<li><a href="#">My Cart</a></li>
+								<li><a href="#">Wishlist</a></li>
+								<li><a href="#">Checkout</a></li>
+								<li><a href="#">Userinfor</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-3 hidden-sm hidden-xs">
+						<div class="footer-menu">
+							<h4>INFORMATION</h4>
+							<ul>
+								<li><a href="#">Sitemap</a></li>
+								<li><a href="#">Privacy Policy</a></li>
+								<li><a href="#">Your Account</a></li>
+								<li><a href="#">Advanced Search</a></li>
+								<li><a href="#">Affiliates</a></li>
+								<li><a href="#">Group Sales</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-4 col-xs-12 xs-res-mrbtm">
+						<div class="footer-menu">
+							<h4>CONTACT US</h4>
+							<ul>
+								<li><a href="#">Product Recall</a></li>
+								<li><a href="#">Gift Vouchers</a></li>
+								<li><a href="#">Returns and Exchanges</a></li>
+								<li><a href="#">Shipping Options</a></li>
+								<li><a href="#">Blogs</a></li>
+								<li><a href="#">Help & Faqs</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-4 col-xs-12">
+						<div class="address-area">
+							<a href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'index' %}{% endif %}"><img src="{% static 'assets/img/home-1/logo_dg_footer.png' %}" width="280" height="200" alt="" /></a>
+							<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.</p>
+							<div class="contact-details">
+								<ul>
+									<li><i class="fa fa-phone"></i>+91 7428730894</li>
+									<li><i class="fa fa-envelope-o"></i> dgshoes930@gmail.com</li>
+									<li><i class="fa fa-map-marker"></i> Kinfra, Malappuram,Kerala,India</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Footer Middle Area End -->
+		<!-- Footer Bottom Area Start -->
+		<div class="footer-bottom-area">
+			<div class="container">
+				<div class="row ">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<p>Copyright &copy;  <a href="http://www.devitems.com/"> Devitems. </a> All Rights Reserved.</p>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<img src="{% static 'assets/img/other-pg/payment.png' %}" alt="" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Footer Bottom Area End -->
+		
+		<!-- all js here -->
+		<!-- jquery latest version -->
+        <script src="{% static 'assets/js/vendor/jquery-1.12.0.min.js' %}"></script>
+		<!-- bootstrap js -->
+        <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+		<!-- owl.carousel js -->
+        <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+		<!-- meanmenu js -->
+        <script src="{% static 'assets/js/jquery.meanmenu.js' %}"></script>
+        <!-- Nivo slider js  --> 		
+		<script src="{% static 'assets/lib/js/jquery.nivo.slider.js' %}" type="text/javascript"></script>
+		<script src="{% static 'assets/lib/home.js' %}" type="text/javascript"></script>
+		<!-- count down js  -->
+		<script src="{% static 'assets/js/jquery.countdown.js' %}"></script>
+		<!-- jquery-ui js -->
+        <script src="{% static 'assets/js/jquery-ui.min.js' %}"></script>
+		<!-- wow js -->
+        <script src="{% static 'assets/js/wow.min.js' %}"></script>
+		<!-- plugins js -->
+        <script src="{% static 'assets/js/plugins.js' %}"></script>
+		<!-- main js -->
+        <script src="{% static 'assets/js/main.js' %}"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+
+<!-- Mirrored from demo.hasthemes.com/fowler-preview/fowler/shop.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 20 Jun 2024 10:16:15 GMT -->
+</html>
