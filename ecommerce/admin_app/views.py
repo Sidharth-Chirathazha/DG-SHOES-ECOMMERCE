@@ -28,10 +28,8 @@ from weasyprint.text.fonts import FontConfiguration
 from django.conf import settings
 import os
 from django.utils.timezone import make_aware
-# from .utils import superuser_required
 
 User = get_user_model()
-# Create your views here.
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +63,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-
+@user_passes_test(lambda u: u.is_superuser, login_url="/admin_login/")
 def get_dashboard_data(request):
     period = request.GET.get('period', 'daily')
     start_date = request.GET.get('start_date')
@@ -94,7 +92,6 @@ def get_dashboard_data(request):
     total_values = [item['total'] for item in data]
     discount_values = [item['discount'] for item in data]
     
-    # Calculate refunds
     refund_values = []
     for period_start in data:
         if period == 'daily':
@@ -117,7 +114,6 @@ def get_dashboard_data(request):
         
         refund_values.append(period_refunds)
     
-    # Calculate overall statistics
     overall_sales_count = orders.count()
     overall_order_amount = sum(total_values)
     total_discount_amount = sum(discount_values)
@@ -126,7 +122,6 @@ def get_dashboard_data(request):
     net_sales_amount = final_total_amount - overall_refund_amount
     ordered_items = OrderItem.objects.filter(order__in=orders).aggregate(Sum('quantity'))['quantity__sum'] or 0
     
-    # Prepare data for the chart
     net_values = [total - discount - refund for total, discount, refund in zip(total_values, discount_values, refund_values)]
     
     response_data = {
@@ -158,7 +153,6 @@ def sales_report(request):
 
     orders = Order.objects.filter(payment_status='Paid')
 
-    # Get filter parameters
     start_date = request.GET.get('start_date','')
     end_date = request.GET.get('end_date','')
 
@@ -167,16 +161,12 @@ def sales_report(request):
         end_date = make_aware(datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59))
         orders = orders.filter(order_date__range=(start_date, end_date))
 
-    # Calculate overall sales count
     overall_sales_count = orders.count()
 
-    # Calculate original total without discounts
     overall_order_amount = sum((order.total_amount + order.discount_amount + order.offer_discount_total) for order in orders)
 
-    # Calculate total discount amount (coupons and offers)
     total_discount_amount = sum(order.discount_amount + order.offer_discount_total for order in orders)
 
-    # Calculate final total after discounts
     final_total_amount = overall_order_amount - total_discount_amount
 
     detailed_orders = []
@@ -245,10 +235,8 @@ def sales_report(request):
 
 @user_passes_test(lambda u: u.is_superuser, login_url="/admin_login/")
 def export_pdf(request):
-    # Reuse the logic from the dashboard view
     orders = Order.objects.filter(payment_status='Paid')
     
-    # Get filter parameters
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
     
@@ -258,16 +246,12 @@ def export_pdf(request):
         orders = orders.filter(order_date__range=(start_date, end_date))
 
     
-    # Calculate overall sales count
     overall_sales_count = orders.count()
     
-    # Calculate original total without discounts
     overall_order_amount = sum((order.total_amount + order.discount_amount + order.offer_discount_total) for order in orders)
     
-    # Calculate total discount amount (coupons and offers)
     total_discount_amount = sum(order.discount_amount + order.offer_discount_total for order in orders)
     
-    # Calculate final total after discounts
     final_total_amount = overall_order_amount - total_discount_amount
     
     detailed_orders = []
@@ -305,19 +289,15 @@ def export_pdf(request):
         'end_date': end_date,
     }
     
-    # Render the HTML template
     html_string = render_to_string('sales_report_pdf_template.html', context)
 
-    # Configure WeasyPrint
     font_config = FontConfiguration()
     base_url = settings.STATIC_ROOT if settings.STATIC_ROOT else os.path.join(settings.BASE_DIR, 'static')
     
     
-    # Create a PDF file
     html = HTML(string=html_string, base_url=base_url)
     result = html.write_pdf(font_config=font_config)
     
-    # Generate HTTP response
     response = HttpResponse(content_type='application/pdf;')
     response['Content-Disposition'] = 'attachment; filename=sales_report.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
@@ -329,10 +309,8 @@ def export_pdf(request):
 
 @user_passes_test(lambda u: u.is_superuser, login_url="/admin_login/")
 def export_excel(request):
-    # Reuse the logic from the dashboard view
     orders = Order.objects.filter(payment_status='Paid')
     
-    # Get filter parameters
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
     
@@ -341,23 +319,18 @@ def export_excel(request):
         end_date = make_aware(datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59))
         orders = orders.filter(order_date__range=(start_date, end_date))
     
-    # Calculate overall totals
     overall_sales_count = orders.count()
     overall_order_amount = sum((order.total_amount + order.discount_amount + order.offer_discount_total) for order in orders)
     total_discount_amount = sum(order.discount_amount + order.offer_discount_total for order in orders)
     overall_refund_amount = 0
     
-    # Create an in-memory output file for the new workbook
     output = BytesIO()
     
-    # Create a workbook and add a worksheet
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet()
     
-    # Add a bold format to use to highlight cells
     bold = workbook.add_format({'bold': True})
     
-    # Write summary data
     worksheet.write(0, 0, "Sales Report Summary", bold)
     worksheet.write(1, 0, "Sales Count:", bold)
     worksheet.write(1, 1, overall_sales_count)
@@ -366,20 +339,17 @@ def export_excel(request):
     worksheet.write(3, 0, "Discount:", bold)
     worksheet.write(3, 1, total_discount_amount)
     worksheet.write(4, 0, "Refunded Total:", bold)
-    worksheet.write(4, 1, "To be calculated")  # Placeholder, will update later
+    worksheet.write(4, 1, "To be calculated")  
     worksheet.write(5, 0, "Final Amount:", bold)
-    worksheet.write(5, 1, "To be calculated")  # Placeholder, will update later
+    worksheet.write(5, 1, "To be calculated") 
     
-    # Add a blank row for separation
     current_row = 7
     
-    # Write data headers
     headers = ['Date', 'Order ID', 'Customer', 'Original', 'Coupon', 'Offer', 'Final', 'Refunded']
     for col, header in enumerate(headers):
         worksheet.write(current_row, col, header, bold)
     current_row += 1
     
-    # Iterate over the data and write it out row by row
     for order in orders:
         original_amount = order.total_amount + order.discount_amount + order.offer_discount_total
         final_amount = original_amount - (order.discount_amount + order.offer_discount_total)
@@ -398,18 +368,14 @@ def export_excel(request):
         worksheet.write(current_row, 7, refund_amount or '-')
         current_row += 1
     
-    # Update the summary with the final calculations
     final_total_amount = overall_order_amount - total_discount_amount - overall_refund_amount
     worksheet.write(4, 1, overall_refund_amount)
     worksheet.write(5, 1, final_total_amount)
     
-    # Close the workbook before sending the data
     workbook.close()
     
-    # Rewind the buffer
     output.seek(0)
     
-    # Set up the Http response
     filename = 'sales_report.xlsx'
     response = HttpResponse(
         output,
@@ -531,12 +497,12 @@ def orders_list(request):
     
     return render(request,'order_list.html', context )
 
+@user_passes_test(lambda u: u.is_superuser, login_url="/admin_login/")
 def confirm_order(request,item_id):
 
     order_item = get_object_or_404(OrderItem, id=item_id)
     order_item.status = 'Processing'
     order_item.save()
-    # messages.success(request, 'Order item confirmed.')
     return redirect('order_list')
 
 def return_order(request,item_id):

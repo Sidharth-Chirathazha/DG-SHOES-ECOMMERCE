@@ -8,19 +8,15 @@ from .models import Order,OrderItem
 from wallet_app.models import Wallet,WalletTransaction
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-# from django.template.loader import render_to_string
 from coupon_app.models import Coupons
 from django.views.decorators.http import require_POST
 from decimal import Decimal
 import razorpay
-# from django.db import transaction
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.urls import reverse
 
-
-# Create your views here.
 
 #=========================CHECKOUT SECTION==============================#
 @login_required
@@ -45,7 +41,6 @@ def checkout_view(request):
         cart_total_without_discount = sum((item.product.price * item.quantity) for item in cart_items)
         offer_total = cart_total_without_discount - cart_total
 
-        #Apply coupon if one is already associated with cart
         coupon = cart.applied_coupon
         discount = 0
         if coupon and cart_total >= coupon.min_limit:
@@ -73,15 +68,9 @@ def checkout_view(request):
         else:
             selected_address = Address.objects.get(id=selected_address_id)
 
-
-            # Calculate refund percent
             refund_percent = (discount/cart_total)*100 if discount != 0 else 0
             razorpay_order_id = None
-            # final_amount = (cart_total - discount).quantize(Decimal('0.01'))
 
-            
-            # Check payment method and handle accordingly
-            # Check payment method and handle accordingly
             if payment_method == 'Wallet':
 
                 try:
@@ -90,7 +79,6 @@ def checkout_view(request):
                     user_wallet = Wallet.objects.create(user=user)
                 
                 if user_wallet.balance >= (cart_total - discount):
-                    # Create wallet transaction
                     WalletTransaction.objects.create(
                         wallet = user_wallet,
                         transaction_type = 'debit',
@@ -110,13 +98,11 @@ def checkout_view(request):
                             'message' : "Some items in your cart are out of stock. Please review your cart.",
                             'redirect' : reverse('home')
                         })
-                        # messages.error(request, "Some items in your cart are out of stock. Please review your cart.")
-                        # return redirect('shop_list')
                     if not order:
                         return JsonResponse({
                             'success': False,
                             'message': "An error occurred while creating your order. Please try again.",
-                            'redirect': reverse('home')  # Replace 'home' with your home page URL name
+                            'redirect': reverse('home')  
                         })
                 else:
                     messages.error(request, 'Insufficient wallet balance.')
@@ -124,20 +110,17 @@ def checkout_view(request):
                 
             elif payment_method == 'RazorPay':
                 try:
-                    # Create a Razorpay order
                     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-                    amount = int((cart_total - discount) * 100)  # Amount in paise
+                    amount = int((cart_total - discount) * 100)  
                     razorpay_order = client.order.create({
                         'amount': amount,
                         'currency': 'INR',
                         'payment_capture': '1'
                     })
 
-                    # Create a pending order in your database
                     razorpay_order_id = razorpay_order['id']
                     order,should_redirect = create_order(user, selected_address, payment_method, coupon, cart_total, discount, refund_percent, razorpay_order_id, offer_total)
 
-                    # Return the Razorpay order details to the frontend
                     if order:
                         return JsonResponse({
                             'id': razorpay_order_id,
@@ -152,20 +135,16 @@ def checkout_view(request):
                             'message' : "Some items in your cart are out of stock. Please review your cart.",
                             'redirect' : reverse('home')
                         })
-                        # messages.error(request, "Some items in your cart are out of stock. Please review your cart.")
-                        # return redirect('shop_list')
                     if not order:
                         return JsonResponse({
                             'success': False,
                             'message': "An error occurred while creating your order. Please try again.",
-                            'redirect': reverse('home')  # Replace 'home' with your home page URL name
+                            'redirect': reverse('home') 
                         })
                 except Exception as e:
-                    # print(f"Error creating Razorpay order: {str(e)}")
                     return JsonResponse({'error': 'Failed to create Razorpay order'}, status=500)
             
             else:
-                # Handle other payment methods as before
                 order,should_redirect = create_order(user, selected_address, payment_method, coupon, cart_total, discount, refund_percent, razorpay_order_id, offer_total)
                 if order:
                     return JsonResponse({
@@ -179,13 +158,11 @@ def checkout_view(request):
                             'message' : "Some items in your cart are out of stock. Please review your cart.",
                             'redirect' : reverse('home')
                         })
-                        # messages.error(request, "Some items in your cart are out of stock. Please review your cart.")
-                        # return redirect('shop_list')
                 if not order:
                     return JsonResponse({
                         'success': False,
                         'message': "An error occurred while creating your order. Please try again.",
-                        'redirect': reverse('home')  # Replace 'home' with your home page URL name
+                        'redirect': reverse('home')  
                     })
 
 
@@ -209,13 +186,12 @@ def checkout_view(request):
 
 def create_order(user,address,payment_method,coupon,cart_total,discount,refund_percent,razorpay_order_id,offer_total):
 
-    # Create OrderItems and update product quantities
     cart = Cart.objects.get(user=user)
     cart_items = CartItem.objects.filter(cart=cart)
     for cart_item in cart_items:
         if cart_item.product_size.quantity < cart_item.quantity:
             messages.error(user.request, f"{cart_item.product.product_name} is out of stock.")
-            return None, True  # Return None for order and True for redirect flag
+            return None, True  
 
 
     payment_status = 'Pending'
@@ -253,11 +229,9 @@ def create_order(user,address,payment_method,coupon,cart_total,discount,refund_p
             price=discounted_price,
             status='Pending'
         )
-        # Decrease product quantity
         cart_item.product_size.quantity -= cart_item.quantity
         cart_item.product_size.save()
 
-    # Clear the cart
     cart_items.delete()
     cart.applied_coupon = None
     cart.save()
@@ -281,23 +255,19 @@ def verify_payment(request):
             }
             client.utility.verify_payment_signature(params_dict)
             
-            # Update the order status
             order = Order.objects.get(id=data['order_id'])
             order.payment_status = 'Paid'
             order.save()
 
 
-            # Clear the cart
             cart = Cart.objects.get(user=order.ordered_user)
             cart.items.all().delete()
 
-            # Return the URL for the order success page
             return JsonResponse({
                 'success': True,
                 'redirect_url': reverse('order_success', args=[order.id])
             })
         except Exception as e:
-            # print(f"Payment verification failed: {str(e)}")
             order = Order.objects.get(id=data['order_id'])
             order.payment_status = 'Pending'
             order.save()
@@ -351,7 +321,6 @@ def apply_coupon(request):
 
         new_total = cart_total - discount
 
-        #Save the applied coupon to the cart
         cart.applied_coupon = coupon
         cart.save()
 

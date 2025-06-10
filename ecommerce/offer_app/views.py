@@ -50,7 +50,6 @@ def add_offer(request):
         if errors:
             return JsonResponse({'status': 'error', 'message': errors})
         
-         # Create the offer
         offer = Offer(
             name=name,
             start_date=start_date,

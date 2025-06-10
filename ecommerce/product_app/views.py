@@ -30,7 +30,6 @@ from django.core.exceptions import ValidationError
 
 
 #=========================PRODUCT LIST VIEW==============================#
-# Create your views here.
 @user_passes_test(lambda u: u.is_superuser, login_url="/admin_login/")
 def productList(request):
 
@@ -92,7 +91,6 @@ def addProduct(request):
                 'sizes' : [size[0] for size in ProductSize.SIZE_CHOICES],
             }
 
-            # Perform validations
             validate_product_name(product_name)
             validate_category_and_subcategory(category_id, subcategory_id)
             validate_description(description)
@@ -148,7 +146,7 @@ def addProduct(request):
             product_size.save()
 
             messages.success(request, "Product added successfully!")
-            return redirect('product_list')  # Replace with the appropriate URL
+            return redirect('product_list')   
         except ValidationError as e:
             error_message = ' '.join(e.messages)
             messages.error(request, error_message)
@@ -208,7 +206,7 @@ def editProduct(request,product_id):
 
 
             messages.success(request, "Product updated successfully!")
-            return redirect('product_list')  # Replace with the appropriate URL
+            return redirect('product_list')  
         except ValidationError as e:
             error_message = ' '.join(e.messages)
             messages.error(request, error_message)
@@ -325,7 +323,6 @@ def add_size_quantity(request, color_image_id):
         size = request.POST.get('size')
         quantity = request.POST.get('quantity')
 
-        # Check if the size already exists for this color variant
         if ProductSize.objects.filter(product_data=color_variant, size=size).exists():
             error_message = "This size already exists for the color variant."
             sizes = [size[0] for size in ProductSize.SIZE_CHOICES]
@@ -340,7 +337,7 @@ def add_size_quantity(request, color_image_id):
             quantity=quantity
         )
 
-        return redirect('variant_list',product_id = color_variant.product_id.id)  # Replace with appropriate view name
+        return redirect('variant_list',product_id = color_variant.product_id.id)  
 
     sizes = [size[0] for size in ProductSize.SIZE_CHOICES]
     existing_sizes = ProductSize.objects.filter(product_data = color_variant).values_list('size',flat=True)
@@ -364,7 +361,6 @@ def edit_size_quantity(request, color_image_id):
                 size_instance.quantity = int(new_quantity)
                 size_instance.save()
 
-         # Handle cropped image uploads
         for i in range(1, 4):
             cropped_image_data = request.POST.get(f'cropped_image{i}')
             if cropped_image_data:

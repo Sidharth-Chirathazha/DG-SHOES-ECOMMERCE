@@ -15,7 +15,6 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
 
 @user_passes_test(lambda u: u.is_superuser, login_url="/admin_login/")
 def coupons_view(request):
@@ -23,7 +22,6 @@ def coupons_view(request):
     query = request.GET.get('q', '')
    
 
-   # Get all coupons and update their status
     all_coupons = Coupons.objects.all()
     for coupon in all_coupons:
         coupon.update_active_status()
@@ -76,8 +74,6 @@ def add_coupon(request):
 
         try:
             cleaned_data = validate_coupon_data(title, description, valid_from, expiry, discount_amount, discount_percentage, min_limit)
-            # If validation passes, proceed with saving the coupon
-            # Use cleaned_data to create your Coupon object
             coupon = Coupons(
                 title=title,
                 description=description,
@@ -90,7 +86,7 @@ def add_coupon(request):
             )
             coupon.save()
             messages.success(request, 'Coupon created successfully.')
-            return redirect('coupons')  # or wherever you want to redirect after successful creation
+            return redirect('coupons') 
         except ValidationError as e:
             for error in e.messages:
                 messages.error(request, error)
@@ -123,7 +119,6 @@ def edit_coupon(request,coupon_id):
             cleaned_data = validate_coupon_data(title, description, valid_from, expiry, discount_amount, discount_percentage, min_limit)
 
 
-            # Update the coupon fields
             coupon.title = title
             coupon.description = description
             coupon.valid_from = valid_from
@@ -145,11 +140,5 @@ def edit_coupon(request,coupon_id):
             messages.error(request, 'An error occurred while updating the coupon.')
 
         return redirect('coupons')
-
-    # context = {
-    #     'coupon': coupon,
-    #     'formatted_valid_from': coupon.valid_from.strftime('%Y-%m-%d') if coupon.valid_from else '',
-    #     'formatted_expiry': coupon.expiry.strftime('%Y-%m-%d') if coupon.expiry else '',
-    # }
 
     return redirect('coupons')

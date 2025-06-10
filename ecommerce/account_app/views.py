@@ -36,8 +36,7 @@ def user_account_view(request):
     user_orders = Order.objects.filter(ordered_user = user).prefetch_related('order_items__product_size__product_data__product_id', 'order_items__product_size__product_data').order_by('-order_date')
 
 
-    # Pagination
-    paginator = Paginator(user_orders, 5)  # Show 5 orders per page
+    paginator = Paginator(user_orders, 5) 
     page_number = request.GET.get('page')
     user_orders = paginator.get_page(page_number)
 
@@ -45,7 +44,7 @@ def user_account_view(request):
         user_wallet = user.wallet
 
         all_wallet_transactions = user_wallet.transactions.all().order_by('-timestamp')
-        wallet_paginator = Paginator(all_wallet_transactions, 5)  # Show 5 transactions per page
+        wallet_paginator = Paginator(all_wallet_transactions, 5) 
         wallet_page_number = request.GET.get('wallet_page')
         wallet_transactions = wallet_paginator.get_page(wallet_page_number)
     except Wallet.DoesNotExist:
@@ -84,7 +83,6 @@ def update_user_info(request):
         last_name_error = validate_last_name(last_name)
         phone_error = phone_validate(phone_number, user_id=user.id)
 
-        # Check for any validation errors
         errors = {}
         if first_name_error:
            errors['first_name'] = first_name_error
@@ -164,7 +162,6 @@ def add_address(request):
 
         address.save()
         
-        # Check if there is a 'next' parameter in the POST data
         next_page = request.POST.get('next')
         if next_page:
             return redirect(next_page)
@@ -197,7 +194,6 @@ def edit_address(request):
         address.landmark = request.POST.get('landmark')
 
         if not address.pin.isdigit() or len(address.pin) != 6:
-            # Handle validation error
             return JsonResponse({'success': False, 'error': 'Invalid PIN code'})
         
         address.save()
@@ -341,12 +337,11 @@ def retry_payment(request,order_id):
 
     except Order.DoesNotExist:
         messages.error(request, 'Invalid order or payment already completed.')
-        return redirect('order_details')  # Redirect to order history or appropriate page
+        return redirect('order_details')  
     
     amount = int(order.total_amount * 100)
 
     try:
-        # Create a new Razorpay order
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create({
             'amount': amount,
@@ -354,11 +349,9 @@ def retry_payment(request,order_id):
             'payment_capture': '1'
         })
 
-        # Update the order with the new Razorpay order ID
         order.razorpay_order_id = razorpay_order['id']
         order.save()
 
-        # Return the Razorpay order details to the frontend
         return JsonResponse({
             'id': razorpay_order['id'],
             'amount': amount,
@@ -367,7 +360,6 @@ def retry_payment(request,order_id):
             'order_id': order.id,
         })
     except Exception as e:
-        # print(f"Error creating Razorpay order for retry: {str(e)}")
         return JsonResponse({'error': 'Failed to create Razorpay order for retry'}, status=500)
     
 #=========================PAYMENT RETRY SECTION END==============================#
@@ -377,13 +369,10 @@ def retry_payment(request,order_id):
 #=========================INVOICE SECTION==============================#
 
 def generate_invoice_pdf(order,order_items):
-    # Render the HTML template with the order context
     html = render_to_string('Invoice.html', {'order': order,'order_items' : order_items})
     
-    # Create a BytesIO buffer to receive the PDF content
     pdf_buffer = BytesIO()
     
-    # Create a PDF using xhtml2pdf
     pisa_status = pisa.CreatePDF(
         html, dest=pdf_buffer
     )
@@ -399,24 +388,19 @@ def download_invoice(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     order_items = OrderItem.objects.filter(order=order)
     
-    # Check if the user has permission to download this invoice
     if request.user != order.ordered_user:
         return HttpResponseForbidden("You don't have permission to download this invoice.")
     
-    # Check if the payment status is 'Paid'
     if order.payment_status != 'Paid':
         return HttpResponseForbidden("Invoice is not available. Payment status is not 'Paid'.")
     
-    # Generate invoice number if it doesn't exist
     invoice_number = order.generate_invoice_number()
     
-    # Generate the PDF
     pdf_buffer = generate_invoice_pdf(order,order_items)
 
     if pdf_buffer is None:
         return HttpResponse("There was an error generating the PDF.", status=500)
     
-    # Create the HTTP response
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="invoice_{invoice_number}.pdf"'
     response.write(pdf_buffer.getvalue())

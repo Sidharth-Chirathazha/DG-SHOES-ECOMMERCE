@@ -145,8 +145,6 @@ def registerPage(request):
         if password_error:
             errors_message['password'] = password_error
         if not errors_message:
-            # user = User.objects.create_user(username=username,email=email,phone_number=phone,password=password1)
-            # my_user.save()
             otp = generateOtp()
 
             request.session['gender'] = gender
@@ -204,7 +202,6 @@ def otpVerification(request):
                 user.set_password(password)
                 user.save()
 
-                # Create a wallet for the new user
                 wallet = Wallet.objects.create(user=user)
 
                 if referral_code:
@@ -223,20 +220,17 @@ def otpVerification(request):
                         )
                         wallet_transaction.save()
                     except User.DoesNotExist:
-                        pass  # Invalid referral code, do nothing
-
+                        pass 
                 request.session.flush()
 
 
                 messages.success(request,"Account created successfully, Login into your account")
                 return redirect('login')
             
-            #For expired token
             else:
                 messages.error(request,"The OTP has expired ! Resend OTP")
                 return redirect('otp_verification')
             
-        #For invalid token
         else:
             messages.error(request,"Invalid OTP! Enter valid OTP")
             return redirect('otp_verification')
@@ -439,9 +433,8 @@ def shopList(request):
     category_name = request.GET.get('category')
     subcategory_name = request.GET.get('subcategory')
     query = request.GET.get('q','')
-    sort_by = request.GET.get('sort', 'position')  # Default sort by position
-     # Filter by color
-    selected_colors = request.GET.getlist('color')  # Use getlist to get multiple colors
+    sort_by = request.GET.get('sort', 'position') 
+    selected_colors = request.GET.getlist('color') 
     selected_price_ranges = request.GET.getlist('price_ranges[]')
 
     categories = Category.objects.filter(is_listed = True).prefetch_related('subcategories').filter(subcategories__is_listed =True).distinct()
@@ -456,8 +449,6 @@ def shopList(request):
 
         products = products.filter(product_name__icontains=query,is_listed=True)
 
-    
-    # Handle price range filtering
     if selected_price_ranges:
         price_filter = Q()
         for price_range in selected_price_ranges:
@@ -465,7 +456,6 @@ def shopList(request):
                 min_price, max_price = map(int, price_range.split('-'))
                 price_filter |= Q(price__gte=min_price, price__lte=max_price)
             else:
-                # Handle the "Above ₹6000" case
                 min_price = int(price_range.rstrip('+'))
                 price_filter |= Q(price__gte=min_price)
         
@@ -485,7 +475,6 @@ def shopList(request):
             )['total_quantity'] or 0
             color_images.append((product, color_image))
 
-    # If no colors are selected and no color images were found, include all products
     if not selected_colors and not color_images:
         for product in products:
             for color_image in product.productcolorimage_set.filter(is_listed=True):
@@ -506,7 +495,7 @@ def shopList(request):
     elif sort_by == 'latest':
         color_images.sort(key=lambda x: x[0].created_at, reverse=True)
     else:
-        color_images.sort(key=lambda x: x[0].created_at, reverse=True) # Default ordering by latest
+        color_images.sort(key=lambda x: x[0].created_at, reverse=True)
 
 
     paginator = Paginator(color_images,9)
@@ -519,7 +508,6 @@ def shopList(request):
 
         'categories': categories,
         'products' : products,
-        # 'product_color_map': product_color_map,
         'selected_category': category_name,
         'selected_subcategory': subcategory_name,
         'page_obj' : page_obj,
